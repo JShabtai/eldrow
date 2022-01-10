@@ -1,6 +1,10 @@
 # Eldrow
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.2.
+## About
+
+This game is the reverse of [Wordle](https://www.powerlanguage.co.uk/wordle/) - hence the name.
+
+In this game, you tell the computer which parts of it's guess are correct, and it will generate another guess.
 
 ## Development server
 
