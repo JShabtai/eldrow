@@ -1,0 +1,35 @@
+.container {
+    align-items: center;
+    width:900px;
+}
+
+.heading {
+}
+
+.block {
+    font-size: 21pt;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    padding: 0px;
+    margin: 5px;
+}
+
+.blockContainer {
+    display: inline-block;
+}
+
+.mat-flat-button.mat-grey {
+   background-color: #666666;
+}
+
+.mat-flat-button.mat-yellow {
+   background-color: #b0b040;
+}
+
+.mat-flat-button.mat-green {
+   background-color: #228822
+}
+
