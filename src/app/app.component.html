@@ -1,35 +1,76 @@
-<div class='container'>
-<h1 class='heading'>eldroW</h1>
+<div class='containerOuter'>
+  <div class='spacer'></div>
+  <div class='containerInner'>
 
-<div *ngIf='stumped'>
-    Stumped
-</div>
-<div *ngIf='thinking'>
-    Thinking {{progress}}%
-</div>
+    <div class='header'>
+      <h1 class='heading'>eldroW</h1>
 
-<div>
-    <div *ngFor='let c of colorBlocks; index as i' class='blockContainer'>
+      <div class='spacer'></div>
+      <div class='hardmode'>
+        <mat-slide-toggle color='primary' [(ngModel)]='hardMode'> Hard Mode </mat-slide-toggle>
+      </div>
+    </div>
+
+    <div class='stumpedContainer'>
+      <div *ngIf='stumped'>
+        I'm stumped, you win!
+      </div>
+    </div>
+
+    <div class='thinkingContainer'>
+      <div *ngIf='thinking' class='thinkingSpinner'>
+        <mat-progress-spinner [value]='progress'>
+        </mat-progress-spinner>
+      </div>
+    </div>
+
+
+    <div>
+      <div *ngFor='let c of colorBlocks; index as i' class='blockContainer'>
         <div [ngSwitch]='c' (click)='nextColor(i)'>
+          <button mat-flat-button *ngSwitchCase="colors.Grey" class='block' color='grey'>
+            {{currentGuess[i]}}
+          </button>
+          <button mat-flat-button *ngSwitchCase="colors.Yellow" class='block' color='yellow'>
+            {{currentGuess[i]}}
+          </button>
+          <button mat-flat-button *ngSwitchCase="colors.Green" class='block' color='green'>
+            {{currentGuess[i]}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class='actionButtons'>
+      <button class='actionButton' color='primary' mat-flat-button (click)='submit()' *ngIf='!thinking'>
+        Submit
+      </button>
+      <button class='actionButton' color='warn' mat-flat-button  (click)='reset()' *ngIf='!thinking'>
+        Reset
+      </button>
+      <button class='actionButton' *ngIf='thinking' mat-stroked-button  (click)='stopFn()'>
+        Stop
+      </button>
+    </div>
+
+    <div>
+      <div *ngFor='let h of history' class=''>
+        <div *ngFor='let c of h.score; index as i' class='blockContainer'>
+          <div [ngSwitch]='c'>
             <button mat-flat-button *ngSwitchCase="colors.Grey" class='block' color='grey'>
-                {{currentGuess[i]}}
+              {{h.guess[i]}}
             </button>
             <button mat-flat-button *ngSwitchCase="colors.Yellow" class='block' color='yellow'>
-                {{currentGuess[i]}}
+              {{h.guess[i]}}
             </button>
             <button mat-flat-button *ngSwitchCase="colors.Green" class='block' color='green'>
-                {{currentGuess[i]}}
+              {{h.guess[i]}}
             </button>
+          </div>
         </div>
+        <br />
+      </div>
     </div>
-</div>
-<button mat-stroked-button (click)='submit()'>
-    Submit
-</button>
-<button mat-stroked-button  (click)='reset()'>
-    Reset
-</button>
-<button *ngIf='thinking' mat-stroked-button  (click)='stopFn()'>
-    Stop
-</button>
+  </div>
+  <div class='spacer'></div>
 </div>

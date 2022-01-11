@@ -1,9 +1,54 @@
-.container {
-    align-items: center;
-    width:900px;
+.containerOuter {
+    text-align: center;
+    display: flex;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
 }
 
+.containerInner {
+    background-color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0px;
+    text-align: center;
+    width: 600px;
+    border: solid grey;
+    border-width: 0px 2px 0px 2px;
+    height: 100%;
+}
+
+.header {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spacer {
+    flex:1;
+}
+
+
 .heading {
+    text-align: left;
+    font-size: 44pt;
+    flex:1;
+}
+.hardMode {
+    flex:1;
+}
+
+
+.actionButtons {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.actionButton {
+    margin: 10px;
 }
 
 .block {
@@ -33,3 +78,16 @@
    background-color: #228822
 }
 
+.stumpedContainer {
+    height: 25px;
+}
+
+.thinkingContainer {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.thinkingSpinner {
+  padding: 12px;
+}

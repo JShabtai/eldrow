@@ -15,6 +15,11 @@ type Score = [
   Colors,
 ];
 
+interface Guess {
+  guess: string;
+  score: Score;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,6 +30,9 @@ export class AppComponent {
   // the remaining possible answers
   static readonly firstGuess = 'raise';
 
+  public history: Guess[] = [];
+
+  public hardMode = false;
   public stumped = false;
   public thinking = false;
   public stop = false;
@@ -45,6 +53,9 @@ export class AppComponent {
   private possibleWords = [...words];
 
   public nextColor(i: number) {
+    if (this.thinking) {
+      return;
+    }
     this.colorBlocks[i] += 1;
     if (this.colorBlocks[i] > 2) {
       this.colorBlocks[i] = 0;
@@ -82,6 +93,7 @@ export class AppComponent {
   }
 
   public reset() {
+    this.history = [];
     this.stumped = false;
     this.possibleWords = [...words];
     this.currentGuess = AppComponent.firstGuess.toUpperCase();
@@ -109,9 +121,9 @@ export class AppComponent {
   private static filterWords(wordList: string[], guess: string, score: Score) {
     const newList: string[] = [];
     for (let word of wordList) {
-      const wordScore = this.score(word, guess);
+      const wordScore = AppComponent.score(word, guess);
 
-      if (this.compareScores(score, wordScore)) {
+      if (AppComponent.compareScores(score, wordScore)) {
         newList.push(word);
       }
     }
@@ -142,19 +154,24 @@ export class AppComponent {
 
     let count = 0;
 
-    // Check all words, not just current possible words
-    for (let guess of words) {
+
+    let possibleGuesses = words;
+
+    console.log('hm', this.hardMode)
+    if (this.hardMode) {
+      possibleGuesses = this.possibleWords;
+    }
+
+    for (let guess of possibleGuesses) {
       if (this.stop) {
         return;
       }
-    // TODO check more words
-    // for (let guess of ['prong']) {
       count++;
 
       // Add a delay so we don't kill the event loop and freeze the whole page
-      if (count % 100 === 0) {
+      if (count % 20 === 0) {
         this.progress = Math.floor(100 * count/words.length);
-        await new Promise(res => setTimeout(res, 10));
+        await new Promise(res => setTimeout(res, 1));
       }
 
       const rms = await this.computeRms(guess);
@@ -178,8 +195,23 @@ export class AppComponent {
   }
 
   public submit() {
+    if (this.stumped || this.thinking) {
+      return;
+    }
+
+    this.stop = false;
+
+    this.history.push({
+      guess: this.currentGuess,
+      score: [...this.colorBlocks],
+    });
+
+    const thisGuess = this.currentGuess;
+
+    this.currentGuess = '?????';
+
     const newList: string[] = [];
-    this.possibleWords = AppComponent.filterWords(this.possibleWords, this.currentGuess, this.colorBlocks);
+    this.possibleWords = AppComponent.filterWords(this.possibleWords, thisGuess, this.colorBlocks);
 
     console.log(this.possibleWords);
 
