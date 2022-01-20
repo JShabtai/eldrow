@@ -33,6 +33,7 @@ export class AppComponent {
   public history: Guess[] = [];
 
   public hardMode = false;
+  public won = false;
   public stumped = false;
   public thinking = false;
   public stop = false;
@@ -53,7 +54,7 @@ export class AppComponent {
   private possibleWords = [...words];
 
   public nextColor(i: number) {
-    if (this.thinking) {
+    if (this.won || this.stumped || this.thinking) {
       return;
     }
     this.colorBlocks[i] += 1;
@@ -85,6 +86,7 @@ export class AppComponent {
 
           blocks[i] = Colors.Yellow;
           answerList[j] = null;
+          break;
         }
       }
     }
@@ -95,14 +97,19 @@ export class AppComponent {
   public reset() {
     this.history = [];
     this.stumped = false;
+    this.won = false;
     this.possibleWords = [...words];
     this.currentGuess = AppComponent.firstGuess.toUpperCase();
+    this.resetColorBlocks();
+  }
+
+  public resetColorBlocks(color: Colors = Colors.Grey) {
     this.colorBlocks = [
-      Colors.Grey,
-      Colors.Grey,
-      Colors.Grey,
-      Colors.Grey,
-      Colors.Grey,
+      color,
+      color,
+      color,
+      color,
+      color,
     ];
   }
 
@@ -157,7 +164,6 @@ export class AppComponent {
 
     let possibleGuesses = words;
 
-    console.log('hm', this.hardMode)
     if (this.hardMode) {
       possibleGuesses = this.possibleWords;
     }
@@ -186,6 +192,9 @@ export class AppComponent {
       this.currentGuess = bestGuess.toUpperCase();
     }
 
+    console.log('guess: ', bestGuess)
+    console.log('rms: ', bestGuessRms)
+
     this.thinking=false;
   }
 
@@ -195,7 +204,7 @@ export class AppComponent {
   }
 
   public submit() {
-    if (this.stumped || this.thinking) {
+    if (this.won || this.stumped || this.thinking) {
       return;
     }
 
@@ -213,16 +222,22 @@ export class AppComponent {
     const newList: string[] = [];
     this.possibleWords = AppComponent.filterWords(this.possibleWords, thisGuess, this.colorBlocks);
 
-    console.log(this.possibleWords);
+    console.log('Remaining possibilities', this.possibleWords);
 
     if (this.possibleWords.length < 1) {
       this.stumped = true;
+    }
+    else if (this.possibleWords.length === 1) {
+      this.currentGuess = this.possibleWords[0].toUpperCase();
+      this.resetColorBlocks(Colors.Green);
+      this.won = true;
     }
     else if (this.possibleWords.length <= 2) {
       this.currentGuess = this.possibleWords[0].toUpperCase();
     }
     else {
       this.makeGuess();
+      this.resetColorBlocks();
     }
   }
 }
